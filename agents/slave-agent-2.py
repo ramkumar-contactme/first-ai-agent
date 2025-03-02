@@ -1,0 +1,25 @@
+from uagents import Agent, Context, Model
+
+class Message(Model):
+    message: str
+
+agent_name = "SlaveAgent2"
+slave_agent2 = Agent(
+    name=agent_name,
+    port=8002,
+    seed=f"{agent_name} secret phrase",
+    endpoint=["http://127.0.0.1:8002/submit"],
+)
+
+@slave_agent2.on_message(model=Message)
+async def handle_message(ctx: Context, message: Message):
+    print(f"[{agent_name}] 📩 Received message: {message.message}")
+    ctx.logger.info(f"[{agent_name}] Received message: {message.message}")
+
+# Save the agent's address to a file for communication
+with open(f"{agent_name}_address.txt", "w") as f:
+    f.write(slave_agent2.address)
+
+if __name__ == "__main__":
+    print(f"[{agent_name}] 🚀 Running on address: {slave_agent2.address}")
+    slave_agent2.run()
