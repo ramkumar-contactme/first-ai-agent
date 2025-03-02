@@ -12,9 +12,9 @@ slave_agent2 = Agent(
 )
 
 @slave_agent2.on_message(model=Message)
-async def handle_message(ctx: Context, message: Message):
-    print(f"[{agent_name}] 📩 Received message: {message.message}")
-    ctx.logger.info(f"[{agent_name}] Received message: {message.message}")
+async def handle_message(ctx: Context, sender: str, message: Message):  # Added `sender`
+    print(f"[{agent_name}] 📩 Received message from {sender}: {message.message}")
+    ctx.logger.info(f"[{agent_name}] Received message from {sender}: {message.message}")
 
 # Save the agent's address to a file for communication
 with open(f"{agent_name}_address.txt", "w") as f:
